@@ -1,13 +1,30 @@
-AWAKED 4.3 — SLEEPING FOX EDITION
+AWAKED 4.4 — SLEEPING FOX EDITION
 
-This update uses the approved sleeping fox artwork for the Awaked app icon. It retains the existing Firebase authentication, Firestore sync, journal, saved routines, reminders, and profile features.
+This package updates the Awaked PWA with the approved sleeping fox identity,
+a first-run welcome guide, weekly sleep comparison, clearer visual feedback,
+and a versioned offline cache. Existing Firebase Authentication, Firestore
+sync, journal entries, saved routines, profile and local storage key are retained.
 
-Included: index.html, manifest.json, sw.js, icon.svg, icon-192.png, icon-512.png.
+FILES
+- index.html
+- manifest.json
+- sw.js
+- icon.svg
+- icon-192.png
+- icon-512.png
 
-PUBLISHING
-1. Extract this ZIP.
-2. Upload all six files to the root of the Awaked GitHub repository, replacing files with matching names.
-3. Commit the changes to main and wait for GitHub Pages to deploy.
-4. On Android, uninstall the previous installed Awaked app and reinstall it from Chrome after deployment to refresh the app icon.
+DEPLOY
+1. Back up the current GitHub repository before replacing anything.
+2. Upload all six files to the repository root, preserving the filenames.
+3. Commit to the main branch and wait for GitHub Pages to finish deploying.
+4. Open the site in Chrome and allow the new service worker to update.
+5. If the installed app still shows the old icon, remove the old home-screen
+   shortcut and install Awaked again from the deployed site.
 
-This package does not intentionally clear local data or Firebase data.
+NOTES
+- This package does not intentionally clear localStorage or Firebase data.
+- Weekly comparison uses only manually entered journal records.
+- Reminders are browser-scheduled and may not fire after the browser/app closes.
+- Google sign-in still requires the deployed domain to be listed in Firebase
+  Authentication > Settings > Authorized domains.
+- Test sign-in, sync, export, delete-account, and offline loading after deployment.
