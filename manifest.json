@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Awaked \u2014 Your Sleep Companion",
   "short_name": "Awaked",
-  "description": "Plan sleep, save routines and reflect on your rest.",
+  "description": "Plan sleep, track personal sleep goals, save routines and reflect on your rest.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

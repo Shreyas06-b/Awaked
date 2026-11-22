@@ -1,30 +1,14 @@
-AWAKED 4.4 — SLEEPING FOX EDITION
+AWAKED 4.5 — SLEEPING FOX + SLEEP GOALS
 
-This package updates the Awaked PWA with the approved sleeping fox identity,
-a first-run welcome guide, weekly sleep comparison, clearer visual feedback,
-and a versioned offline cache. Existing Firebase Authentication, Firestore
-sync, journal entries, saved routines, profile and local storage key are retained.
+This release includes the fox branding, first-run welcome guidance, weekly comparison, and a personal sleep-goal tracker on the Home screen. The goal is saved locally and included in the existing Firestore sync payload.
 
-FILES
-- index.html
-- manifest.json
-- sw.js
-- icon.svg
-- icon-192.png
-- icon-512.png
+Included: index.html, manifest.json, sw.js, icon.svg, icon-192.png, icon-512.png.
 
-DEPLOY
-1. Back up the current GitHub repository before replacing anything.
-2. Upload all six files to the repository root, preserving the filenames.
-3. Commit to the main branch and wait for GitHub Pages to finish deploying.
-4. Open the site in Chrome and allow the new service worker to update.
-5. If the installed app still shows the old icon, remove the old home-screen
-   shortcut and install Awaked again from the deployed site.
+PUBLISHING
+1. Back up your current repository.
+2. Extract this ZIP.
+3. Upload all six app files to the root of the Awaked GitHub repository, replacing matching files.
+4. Commit to main and wait for GitHub Pages to deploy.
+5. Refresh the website. If the installed app retains old assets, close it fully and reopen; reinstall only if the icon does not refresh.
 
-NOTES
-- This package does not intentionally clear localStorage or Firebase data.
-- Weekly comparison uses only manually entered journal records.
-- Reminders are browser-scheduled and may not fire after the browser/app closes.
-- Google sign-in still requires the deployed domain to be listed in Firebase
-  Authentication > Settings > Authorized domains.
-- Test sign-in, sync, export, delete-account, and offline loading after deployment.
+Existing local journal and routine storage keys and Firebase collection paths are retained.

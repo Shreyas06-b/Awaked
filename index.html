@@ -81,6 +81,9 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
 .creator-footer p{max-width:370px;margin:12px auto 10px;font-size:11px;line-height:1.7}
 .creator-footer p strong{color:var(--text)}
 .creator-signoff{font-size:9px;letter-spacing:.8px;opacity:.75}
+.goal-card .score-track>div{background:linear-gradient(90deg,var(--accent2),var(--accent))}
+.goal-card select{width:auto;min-width:118px;padding:9px 10px;font-size:12px}
+
 
 /* Awaked 4.4 — fox identity, clearer feedback and first-run guidance */
 .brand-mark,.splash-logo{overflow:hidden;background:#111d39;border:1px solid rgba(177,197,255,.24)}
@@ -128,6 +131,12 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent2);outline-of
   <div class="result" id="calcResult"><div class="result-kicker" id="resultKicker">YOUR WAKE-UP TIME</div><div class="result-time" id="resultTime">06:30</div><div class="result-day" id="resultDay">Tomorrow</div><div class="result-meta"><div><div class="meta-label" id="metaA">SLEEP STARTS</div><div class="meta-value" id="metaTimeA">22:30</div></div><div><div class="meta-label">DURATION</div><div class="meta-value" id="metaHours">8 HOURS</div></div><div><div class="meta-label" id="metaB">WAKE-UP</div><div class="meta-value" id="metaTimeB">06:30</div></div></div><div class="row wrap" style="margin-top:16px"><button class="secondary" id="shareBtn">↗ Share result</button><button class="secondary" id="logBtn">＋ Add to journal</button><button class="secondary" id="saveBtn">☆ Save schedule</button></div></div>
  </div>
  <div class="card"><div class="eyebrow">YOUR ROUTINES</div><div class="row"><div><div style="font:600 16px 'Nunito Sans'">Quick schedules</div><div class="small">Load a saved routine in one tap.</div></div><button class="ghost" data-go="savedScreen">View all →</button></div><div id="homeSchedules" class="small" style="margin-top:12px">No saved schedules yet. Save one from your calculation.</div></div>
+ <div class="card goal-card">
+  <div class="row"><div><div class="eyebrow" style="margin:0">YOUR SLEEP GOAL</div><div class="small" style="margin-top:5px">A gentle target for your nightly rest</div></div><span class="pill">PERSONAL TARGET</span></div>
+  <div class="row" style="margin-top:14px;align-items:center"><div><div id="goalProgressValue" style="font:700 27px 'Nunito Sans',sans-serif">—</div><div class="small" id="goalProgressLabel">Log sleep to see your progress</div></div><div style="min-width:118px"><label for="sleepGoalSelect" class="small">Daily goal</label><select id="sleepGoalSelect" aria-label="Daily sleep goal"><option value="7">7 hours</option><option value="7.5">7.5 hours</option><option value="8" selected>8 hours</option><option value="8.5">8.5 hours</option><option value="9">9 hours</option><option value="9.5">9.5 hours</option><option value="10">10 hours</option></select></div></div>
+  <div class="score-track" style="margin-top:13px"><div id="goalProgressBar"></div></div>
+  <div class="small" id="goalProgressHint" style="margin-top:8px">Your weekly average will appear here after you add journal entries.</div>
+ </div>
  <div class="card"><div class="eyebrow">NEXT STEP</div><div class="row"><div><strong id="countdownTitle">Plan a restful night</strong><div class="small" id="countdownText">Calculate a schedule to see your countdown here.</div></div><div style="font-size:25px">✦</div></div></div>
  <footer class="creator-footer">
   <div class="creator-name">Created with care by <strong>SHREYAS G</strong></div>
@@ -233,7 +242,7 @@ const hadAwakedData=!!localStorage.getItem(KEY);
 const blank={profile:{name:'',dob:'',phone:'',photo:''},schedules:[],entries:[],theme:'dark',reduceMotion:false};
 let currentUser=null,cloudReady=false,cloudTimer=null,cloudBusy=false;
 let data=loadData(),reverse=false,lastCalculation=null;
-data.reminders=data.reminders||{bedEnabled:false,bedTime:'22:00',wakeEnabled:false,wakeTime:'06:30'};
+data.reminders=data.reminders||{bedEnabled:false,bedTime:'22:00',wakeEnabled:false,wakeTime:'06:30'};data.sleepGoal=Number(data.sleepGoal)||8;
 function loadData(){try{return {...blank,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(blank)}}
 function persist(){
  try{localStorage.setItem(KEY,JSON.stringify(data))}
@@ -248,6 +257,7 @@ function cloudPayload(){
   theme:data.theme||'dark',
   reduceMotion:!!data.reduceMotion,
   reminders:{bedEnabled:!!data.reminders?.bedEnabled,bedTime:data.reminders?.bedTime||'22:00',wakeEnabled:!!data.reminders?.wakeEnabled,wakeTime:data.reminders?.wakeTime||'06:30'},
+   sleepGoal:Number(data.sleepGoal)||8,
   updatedAt:serverTimestamp()
  };
 }
@@ -323,7 +333,7 @@ async function connectUserData(user){
   data.profile.name=data.profile.name||user.displayName||'';
  }
  try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
- renderProfile();renderSchedules();renderJournal();renderHomeSchedules();updateClock();refreshReminders();
+ renderProfile();renderSchedules();renderJournal();renderHomeSchedules();renderSleepGoal();updateClock();refreshReminders();
  cloudReady=true;
  await setDoc(ref,cloudPayload(),{merge:true});
  setAccountState('synced');
@@ -362,10 +372,10 @@ function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;',
 function updateClock(){const n=new Date();$('liveClock').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');$('today').textContent=new Intl.DateTimeFormat('en',{weekday:'long'}).format(n).toUpperCase();const name=data.profile.name;$('greeting').textContent=name?'Welcome back, '+name.split(' ')[0]+'.':'A better tomorrow starts tonight.'}
 updateClock();setInterval(updateClock,1000);
 function setTheme(t){data.theme=t;document.documentElement.dataset.theme=t;$('themeToggle').textContent=t==='light'?'☾':'☼';$('darkToggle').checked=t==='dark';document.querySelector('meta[name="theme-color"]').content=t==='light'?'#f3f6fc':'#090e1b';persist()}
-setTheme(data.theme||'dark');$('themeToggle').onclick=()=>setTheme(data.theme==='dark'?'light':'dark');$('darkToggle').onchange=e=>setTheme(e.target.checked?'dark':'light');
+setTheme(data.theme||'dark');renderSleepGoal();$('themeToggle').onclick=()=>setTheme(data.theme==='dark'?'light':'dark');$('darkToggle').onchange=e=>setTheme(e.target.checked?'dark':'light');
 if(data.reduceMotion)document.documentElement.style.setProperty('--motion','0');
 $('motionToggle').onchange=e=>{data.reduceMotion=e.target.checked;document.documentElement.classList.toggle('reduce-motion',data.reduceMotion);persist();toast('Animation preference saved')};
-function navigate(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));if(id==='journalScreen')renderJournal();if(id==='savedScreen')renderSchedules();if(id==='profileScreen')renderProfile();window.scrollTo({top:0,behavior:data.reduceMotion?'auto':'smooth'})}
+function navigate(id){if(id==='homeScreen')renderSleepGoal();document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));if(id==='journalScreen')renderJournal();if(id==='savedScreen')renderSchedules();if(id==='profileScreen')renderProfile();window.scrollTo({top:0,behavior:data.reduceMotion?'auto':'smooth'})}
 document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>navigate(b.dataset.screen));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>navigate(b.dataset.go));
 setTimeout(()=>$('splash').classList.add('hide'),850);
 const ONBOARDING_KEY='awaked-onboarding-v1';
@@ -379,11 +389,26 @@ document.querySelectorAll('[data-hours]').forEach(b=>b.onclick=()=>{$('hoursInpu
 $('shareBtn').onclick=async()=>{if(!lastCalculation)return;const c=lastCalculation,msg=`Awaked sleep plan\n${c.reverse?'Wake-up':'Sleep'} time: ${c.time}\nDuration: ${c.hours} hours\n${c.reverse?'Go to bed':'Wake up'}: ${c.result}\nPlan your rest with Awaked.`;try{if(navigator.share)await navigator.share({title:'My Awaked sleep plan',text:msg});else{await navigator.clipboard.writeText(msg);toast('Sleep plan copied to clipboard')}}catch(e){if(e.name!=='AbortError')toast('Could not share on this device')}};
 $('saveBtn').onclick=()=>{if(!lastCalculation){toast('Calculate a plan first');return}const c=lastCalculation;data.schedules.push({id:Date.now(),name:'My '+(c.reverse?'wake-up':'sleep')+' plan',category:'Custom',bed:c.reverse?c.result:c.time,hours:c.hours});persist();renderSchedules();toast('Schedule saved')};
 $('logBtn').onclick=()=>{if(!lastCalculation){toast('Calculate a plan first');return}const c=lastCalculation;const now=new Date();$('entryDate').value=localDateKey(now);$('entryBed').value=c.reverse?c.result:c.time;$('entryWake').value=c.reverse?c.time:c.result;navigate('journalScreen');toast('Review the times and save your actual sleep entry')};
+function renderSleepGoal(){
+ const goal=Number(data.sleepGoal)||8;
+ const select=$('sleepGoalSelect');
+ if(select)select.value=String(goal);
+ const now=new Date();now.setHours(0,0,0,0);
+ const start=new Date(now);start.setDate(start.getDate()-6);
+ const recent=(data.entries||[]).filter(e=>{const d=new Date(e.date+'T12:00:00');return d>=start&&d<=new Date()});
+ const avg=recent.length?recent.reduce((sum,e)=>sum+Number(e.hours||0),0)/recent.length:0;
+ const pct=recent.length?Math.min(100,Math.round(avg/goal*100)):0;
+ $('goalProgressValue').textContent=recent.length?avg.toFixed(1)+'h / '+goal+'h':'—';
+ $('goalProgressLabel').textContent=recent.length?(avg>=goal?'You reached your average goal':(goal-avg).toFixed(1)+'h below your goal'):'No journal data yet';
+ $('goalProgressBar').style.width=pct+'%';
+ $('goalProgressHint').textContent=recent.length?`Based on ${recent.length} logged night${recent.length===1?'':'s'} in the last 7 days · ${pct}% of your target`:'Add a few journal entries to track your weekly average against this target.';
+}
+$('sleepGoalSelect').addEventListener('change',e=>{data.sleepGoal=Number(e.target.value)||8;persist();renderSleepGoal();toast('Sleep goal updated')});
 function updateCountdown(){if(!lastCalculation)return;const c=lastCalculation;const now=new Date();let target=new Date();const [h,m]=c.result.split(':').map(Number);target.setHours(h,m,0,0);if(target<=now)target.setDate(target.getDate()+1);let diff=Math.max(0,target-now);const hrs=Math.floor(diff/3600000),mins=Math.floor(diff%3600000/60000);$('countdownTitle').textContent=c.reverse?'Your planned bedtime':'Your planned wake-up';$('countdownText').textContent=`${String(hrs).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m remaining · ${c.result}`};setInterval(updateCountdown,30000);
 function localDateKey(d=new Date()){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
 function dateDefault(){$('entryDate').value=localDateKey()}dateDefault();
 function sleepHours(bed,wake){const [bh,bm]=bed.split(':').map(Number),[wh,wm]=wake.split(':').map(Number);let d=wh*60+wm-(bh*60+bm);if(d<=0)d+=1440;return d/60}
-$('addEntryBtn').onclick=()=>{const date=$('entryDate').value,bed=$('entryBed').value,wake=$('entryWake').value,rating=Number($('entryRating').value),note=$('entryNote').value.trim();if(!date||!bed||!wake||sleepHours(bed,wake)<=0||sleepHours(bed,wake)>24){$('entryError').style.display='block';return}data.entries.push({id:Date.now(),date,bed,wake,hours:sleepHours(bed,wake),rating,note});data.entries.sort((a,b)=>b.date.localeCompare(a.date));persist();$('entryError').style.display='none';$('entryNote').value='';renderJournal();toast('Journal entry saved')};
+$('addEntryBtn').onclick=()=>{const date=$('entryDate').value,bed=$('entryBed').value,wake=$('entryWake').value,rating=Number($('entryRating').value),note=$('entryNote').value.trim();if(!date||!bed||!wake||sleepHours(bed,wake)<=0||sleepHours(bed,wake)>24){$('entryError').style.display='block';return}data.entries.push({id:Date.now(),date,bed,wake,hours:sleepHours(bed,wake),rating,note});data.entries.sort((a,b)=>b.date.localeCompare(a.date));persist();$('entryError').style.display='none';$('entryNote').value='';renderJournal();renderSleepGoal();toast('Journal entry saved')};
 function timeMinutes(t){const [hh,mm]=String(t||'00:00').split(':').map(Number);return hh*60+mm}
 function circularMeanMinutes(values){const x=values.map(v=>Math.cos(v*Math.PI/720)),y=values.map(v=>Math.sin(v*Math.PI/720));return (Math.atan2(y.reduce((s,v)=>s+v,0),x.reduce((s,v)=>s+v,0))*720/Math.PI+1440)%1440}
 function circularSd(values,mean){const ds=values.map(v=>{let d=Math.abs(v-mean);return Math.min(d,1440-d)});return ds.length?Math.sqrt(ds.reduce((s,v)=>s+v*v,0)/ds.length):0}
