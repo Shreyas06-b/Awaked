@@ -1,12 +1,20 @@
-AWAKED 4.0 — Account, recommendations, consistency and reminders
+AWAKED — FINAL CREATOR CREDIT UPDATE
 
-DEPLOY: Extract this ZIP and upload all five files to the root of the existing GitHub repository https://github.com/Shreyas06-b/Awaked, replacing previous versions. Commit changes and wait for GitHub Pages.
+This update preserves the existing Awaked app and its current features. It does not add new sleep features or remove existing functionality.
 
-FEATURES
-- 14-day sleep consistency estimate based on bedtime and wake-time variation; requires at least 3 journal entries. Not a medical or sleep-quality score.
-- Smart recommendation based on recent journal history, suggesting a regular wake time and approximate bedtime.
-- Optional bedtime and wake-up browser notifications. Scheduled while the app is open; browser timers may not run if the app/browser is closed. Reliable closed-app delivery requires push notification infrastructure.
-- JSON export includes local data and a cloud copy when signed in.
-- Account deletion reauthenticates with Google and deletes users/{uid}/appData/main, users/{uid} and the Firebase Authentication user. Extend deletion logic if more cloud collections are added later.
+What changed:
+- Made the existing developer credit on the Home screen more visible with a card-style treatment.
+- Updated the About label from Awaked 3.0 to Awaked 4.0.
+- Removed a duplicate export button ID so the data export action has one clear entry point.
+- Included bedtime and wake-up reminder preferences in Firestore sync.
+- Updated the service-worker cache version and activation handling so the latest app files replace older cached files.
+- Corrected a stray escaped newline in the JavaScript that prevented the uploaded index.html from parsing.
 
-Existing Google login, guest mode, Firestore sync, calculator, journal and saved routines are retained.
+PUBLISH:
+1. Extract this ZIP.
+2. Open the AWAKED GitHub repository.
+3. Upload the five files inside the extracted folder directly into the repository root (not the folder itself), replacing the existing files: index.html, manifest.json, sw.js, icon.svg, README.txt.
+4. Commit the changes and wait for GitHub Pages to deploy.
+5. On your device, open Awaked and perform a hard refresh. If the old version remains on Android, close the installed PWA/browser tab fully and reopen it.
+
+Existing calculator, Journal, Saved schedules, Profile, Google sign-in, Firestore sync, and all existing screens/features are retained.

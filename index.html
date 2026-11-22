@@ -52,8 +52,8 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
 @media(max-width:360px){body{padding-left:11px;padding-right:11px}.card{padding:16px}.brand-row{margin-top:22px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
-.creator-footer{margin:22px 2px 8px;padding:19px 12px 12px;text-align:center;border-top:1px solid var(--line);color:var(--muted)}
-.creator-name{font:500 13px 'Space Grotesk',sans-serif;letter-spacing:.35px;color:var(--text)}
+.creator-footer{position:relative;margin:22px 0 14px;padding:22px 18px 18px;text-align:center;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,var(--surface),var(--surface2));box-shadow:var(--shadow);color:var(--muted);overflow:hidden}.creator-footer:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent)}
+.creator-name{font:600 14px 'Space Grotesk',sans-serif;letter-spacing:.35px;color:var(--text)}
 .creator-name strong{font-weight:700;letter-spacing:1.1px}
 .creator-role{font-size:9px;letter-spacing:2px;font-weight:800;margin-top:5px;color:var(--accent)}
 .creator-footer p{max-width:370px;margin:12px auto 10px;font-size:11px;line-height:1.7}
@@ -147,7 +147,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
   <button class="secondary" id="saveRemindersBtn">SAVE REMINDERS</button><button class="ghost" id="enableNotificationsBtn" style="margin-top:8px">ENABLE NOTIFICATIONS</button>
   <div class="small" style="margin-top:9px">Reminders work while Awaked is open in this browser. They may not fire if the app or browser is closed.</div></div>
  <div class="card"><div class="eyebrow">ACCOUNT DATA & PRIVACY</div><button class="ghost" id="exportBtn">Export my data (JSON)</button><button class="danger" id="deleteAccountBtn" style="margin-top:9px;display:none">Permanently delete Awaked account</button><div class="small" style="margin-top:9px">Export includes your profile, journal, saved routines and reminder preferences. Account deletion is irreversible; export first if you want a copy.</div></div>
- <div class="card"><div class="eyebrow">ABOUT AWAKED</div><div class="row"><strong>Awaked 3.0</strong><span class="pill">SLEEP COMPANION</span></div><p class="small">Plan your sleep, keep routines and reflect on your rest. Awaked does not track sleep automatically or provide medical advice.</p><button class="ghost" id="exportBtn">Export my data (JSON)</button> <button class="ghost" id="clearBtn">Clear local data</button></div>
+ <div class="card"><div class="eyebrow">ABOUT AWAKED</div><div class="row"><strong>Awaked 4.0</strong><span class="pill">SLEEP COMPANION</span></div><p class="small">Plan your sleep, keep routines and reflect on your rest. Awaked does not track sleep automatically or provide medical advice.</p><button class="ghost" id="clearBtn">Clear local data</button></div>
 </section>
 </main>
 <nav class="bottom-nav" aria-label="Main navigation">
@@ -180,7 +180,8 @@ googleProvider.setCustomParameters({prompt:"select_account"});
 const $=id=>document.getElementById(id),KEY='awaked2-data';
 const blank={profile:{name:'',dob:'',phone:'',photo:''},schedules:[],entries:[],theme:'dark',reduceMotion:false};
 let currentUser=null,cloudReady=false,cloudTimer=null,cloudBusy=false;
-let data=loadData(),reverse=false,lastCalculation=null;\ndata.reminders=data.reminders||{bedEnabled:false,bedTime:'22:00',wakeEnabled:false,wakeTime:'06:30'};
+let data=loadData(),reverse=false,lastCalculation=null;
+data.reminders=data.reminders||{bedEnabled:false,bedTime:'22:00',wakeEnabled:false,wakeTime:'06:30'};
 function loadData(){try{return {...blank,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(blank)}}
 function persist(){
  try{localStorage.setItem(KEY,JSON.stringify(data))}
@@ -194,6 +195,7 @@ function cloudPayload(){
   entries:Array.isArray(data.entries)?data.entries:[],
   theme:data.theme||'dark',
   reduceMotion:!!data.reduceMotion,
+  reminders:{bedEnabled:!!data.reminders?.bedEnabled,bedTime:data.reminders?.bedTime||'22:00',wakeEnabled:!!data.reminders?.wakeEnabled,wakeTime:data.reminders?.wakeTime||'06:30'},
   updatedAt:serverTimestamp()
  };
 }
@@ -263,7 +265,8 @@ async function connectUserData(user){
    profile:{...blank.profile,...(cloud.profile||{}),...(local.profile||{}),
     name:local.profile?.name||cloud.profile?.name||user.displayName||''},
    schedules:mergeItems(local.schedules,cloud.schedules),
-   entries:mergeItems(local.entries,cloud.entries)};
+   entries:mergeItems(local.entries,cloud.entries),
+   reminders:{bedEnabled:false,bedTime:'22:00',wakeEnabled:false,wakeTime:'06:30',...(local.reminders||{}),...(cloud.reminders||{})}};
  }else{
   data.profile.name=data.profile.name||user.displayName||'';
  }
