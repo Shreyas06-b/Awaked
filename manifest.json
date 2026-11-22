@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "Awaked \u2014 Your Sleep Companion",
+  "short_name": "Awaked",
+  "description": "Plan sleep, save routines and reflect on your rest.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090e1b",
+  "theme_color": "#090e1b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
