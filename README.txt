@@ -1,29 +1,26 @@
-AWAKED 2.0 — GitHub Pages update
+AWAKED 3.0 — GitHub Pages + Firebase
 
-WHAT'S NEW:
-- Four-tab navigation: Home, Journal, Saved, Profile.
-- Animated splash screen.
-- Normal and reverse sleep calculator.
-- Share calculated plan (native share sheet where supported; clipboard fallback).
-- Journal with manually entered actual sleep, notes, ratings, weekly average and chart.
-- Saved schedules with categories including College, Weekend, Exams, Work and Custom.
-- Local profile with name, photo, date of birth and optional phone.
-- Dark/light theme, export data and clear local data.
-- Offline PWA cache.
+FILES
+- index.html
+- manifest.json
+- sw.js
+- icon.svg
+- README.txt
 
-HOW TO UPDATE YOUR EXISTING GITHUB PAGES APP:
-1. Extract this ZIP.
-2. Open your existing GitHub repository named awaked.
-3. Open the repository root (main branch).
-4. Choose Add file > Upload files.
-5. Upload and commit index.html, manifest.json, sw.js and icon.svg from this package, replacing the existing versions.
-6. Wait for GitHub Pages to redeploy, then open your existing app URL.
-7. If the old version remains, close the installed app and refresh the website. Service worker cache is versioned awaked-v2; if needed clear Chrome site data for the Pages site and reopen.
+DEPLOY
+1. Open your existing repository: https://github.com/Shreyas06-b/Awaked
+2. Upload these five extracted files to the repository root, replacing the existing files.
+3. Commit the changes and wait for GitHub Pages to deploy.
+4. Open https://shreyas06-b.github.io/Awaked/
 
-IMPORTANT LIMITATIONS:
-- This GitHub Pages version has no real sign-in, cloud sync or multi-device profile. Profile, journal and schedules are stored locally in the browser on each device.
-- Sleep journal entries are manual; the app does not detect sleep or measure sleep quality.
-- Phone number is optional and is not sent anywhere.
-- Data is stored in this browser's localStorage. Export your data from Profile before clearing browser data or switching devices.
-- Profile photos are resized before local storage. If local storage is full, choose a smaller photo.
-- Sleep calculations use elapsed clock time and assume same local timezone; no alarm is set by this web app.
+FIREBASE FEATURES
+- Optional Google sign-in; guest mode remains available.
+- Guest journal entries and saved schedules are merged with the cloud copy on first sign-in.
+- Signed-in data is stored at users/{uid}/appData/main.
+- The published Firestore rules should restrict access to the matching authenticated UID.
+- Profile name, optional DOB/phone, schedules, journal and preferences sync. Profile photo stays local for now.
+
+IMPORTANT
+- Firebase web config is client-side configuration, not a service-account key. Never publish service-account private keys.
+- Do not delete the repository. Replace the existing five files in the repository root.
+- Firestore security depends on rules, not secrecy of the web config.

@@ -7,7 +7,7 @@
 <meta name="description" content="Awaked — your personal sleep companion.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>Awaked 2.0 — Your sleep companion</title>
+<title>Awaked 3.0 — Your sleep companion</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 :root{--bg:#090e1b;--bg2:#101a2d;--surface:rgba(20,31,52,.88);--surface2:#111d31;--text:#f2f6ff;--muted:#8c9bb4;--line:rgba(157,181,220,.16);--accent:#8b9cff;--accent2:#5de0d0;--glow:rgba(105,143,255,.2);--input:#0b1425;--shadow:0 20px 55px rgba(0,0,0,.25);color-scheme:dark}
@@ -81,14 +81,20 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
 </section>
 
 <section class="screen" id="profileScreen">
- <div class="section-title">Your profile</div><p class="section-sub">Make Awaked feel like yours. Your details stay on this device in this version.</p>
+ <div class="section-title">Your profile</div><p class="section-sub">Make Awaked feel like yours. Sign in to sync your sleep data across devices, or keep using guest mode.</p>
  <div class="card">
+  <div class="card" id="accountCard">
+   <div class="eyebrow">AWAKED ACCOUNT</div>
+   <div class="row" style="align-items:center;gap:12px"><div style="flex:1"><strong id="accountTitle">Using Awaked as a guest</strong><div class="small" id="accountStatus" style="margin-top:4px">Your data is saved on this device. Sign in to enable cloud sync.</div></div><span class="pill" id="syncBadge">GUEST</span></div>
+   <div class="row wrap" style="margin-top:13px"><button class="primary" id="googleSignInBtn">CONTINUE WITH GOOGLE</button><button class="secondary" id="signOutBtn" style="display:none">SIGN OUT</button></div>
+   <div class="small" style="margin-top:9px">Google sign-in is optional. Your existing guest data will be merged into your account the first time you sign in. Profile photo remains on this device for now.</div>
+  </div>
   <div class="profile-head"><div class="avatar" id="avatarPreview">A</div><div><div class="profile-name" id="profileDisplayName">Your name</div><div class="profile-sub" id="profileDisplaySub">Personal sleep space</div></div></div>
   <div class="field"><label for="profilePhoto">Profile picture</label><input type="file" id="profilePhoto" accept="image/*"><div class="small">Choose a photo from your gallery. It is stored locally in this browser.</div></div>
   <div class="field"><label for="profileName">Your name</label><input id="profileName" maxlength="45" placeholder="Enter your name"></div>
   <div class="field-row"><div class="field"><label for="profileDob">Date of birth</label><input type="date" id="profileDob"></div><div class="field"><label for="profilePhone">Phone (optional)</label><input type="tel" id="profilePhone" maxlength="20" placeholder="Optional"></div></div>
   <button class="primary" id="saveProfileBtn">SAVE PROFILE</button>
-  <div class="small" style="margin-top:10px">No account or sign-in is required. Profile data is saved on this device only.</div>
+  <div class="small" style="margin-top:10px">Your profile details are stored locally and synced to your account when signed in. Date of birth and phone are optional.</div>
  </div>
  <div class="card"><div class="eyebrow">PREFERENCES</div>
   <div class="toggle-row"><span>Dark mode</span><input class="toggle" type="checkbox" id="darkToggle" checked></div>
@@ -96,7 +102,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
   <div class="toggle-row"><span>Reduce animations</span><input class="toggle" type="checkbox" id="motionToggle"></div>
   <div class="small" style="margin-top:10px">The app uses a 24-hour format for calculations. Clock display preference can be expanded in a future update.</div>
  </div>
- <div class="card"><div class="eyebrow">ABOUT AWAKED</div><div class="row"><strong>Awaked 2.0</strong><span class="pill">SLEEP COMPANION</span></div><p class="small">Plan your sleep, keep routines and reflect on your rest. Awaked does not track sleep automatically or provide medical advice.</p><button class="ghost" id="exportBtn">Export my data (JSON)</button> <button class="ghost" id="clearBtn">Clear local data</button></div>
+ <div class="card"><div class="eyebrow">ABOUT AWAKED</div><div class="row"><strong>Awaked 3.0</strong><span class="pill">SLEEP COMPANION</span></div><p class="small">Plan your sleep, keep routines and reflect on your rest. Awaked does not track sleep automatically or provide medical advice.</p><button class="ghost" id="exportBtn">Export my data (JSON)</button> <button class="ghost" id="clearBtn">Clear local data</button></div>
 </section>
 </main>
 <nav class="bottom-nav" aria-label="Main navigation">
@@ -106,12 +112,76 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
  <button class="nav-btn" data-screen="profileScreen"><span class="nav-icon" id="navAvatar">◉</span><span id="navProfileLabel">Profile</span></button>
 </nav>
 <div class="toast" id="toast"></div>
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFliQWatGVECQcgK1XuwPqIfGuCVSOakM",
+  authDomain: "awaked-068g.firebaseapp.com",
+  projectId: "awaked-068g",
+  storageBucket: "awaked-068g.firebasestorage.app",
+  messagingSenderId: "848358770313",
+  appId: "1:848358770313:web:5e36e11894dc6d5df5e858",
+  measurementId: "G-G7VXJETDDR"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
+
 const $=id=>document.getElementById(id),KEY='awaked2-data';
 const blank={profile:{name:'',dob:'',phone:'',photo:''},schedules:[],entries:[],theme:'dark',reduceMotion:false};
 let data=loadData(),reverse=false,lastCalculation=null;
 function loadData(){try{return {...blank,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(blank)}}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast('Storage is full. Try a smaller profile photo.')} }
+let currentUser = null;
+let cloudTimer = null;
+let cloudReady = false;
+let cloudBusy = false;
+function persist(){
+ try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast('Storage is full. Try a smaller profile photo.')}
+ if(currentUser && cloudReady) scheduleCloudSave();
+}
+function safeCloudData(){
+ return {profile:{name:data.profile?.name||'',dob:data.profile?.dob||'',phone:data.profile?.phone||''},schedules:Array.isArray(data.schedules)?data.schedules:[],entries:Array.isArray(data.entries)?data.entries:[],theme:data.theme||'dark',reduceMotion:!!data.reduceMotion,updatedAt:serverTimestamp()};
+}
+function scheduleCloudSave(){
+ clearTimeout(cloudTimer);
+ cloudTimer=setTimeout(async()=>{
+  if(!currentUser || !cloudReady || cloudBusy)return;
+  cloudBusy=true;
+  try{await setDoc(doc(db,'users',currentUser.uid,'appData','main'),safeCloudData(),{merge:true});setAccountUI('synced')}
+  catch(err){console.error('Awaked cloud sync failed:',err);setAccountUI('error')}
+  finally{cloudBusy=false}
+ },900);
+}
+function mergeById(localItems,cloudItems){const map=new Map();[...(cloudItems||[]),...(localItems||[])].forEach(item=>map.set(String(item.id),item));return [...map.values()].sort((a,b)=>Number(a.id)-Number(b.id));}
+function setAccountUI(state){
+ const title=$('accountTitle'),status=$('accountStatus'),badge=$('syncBadge'),login=$('googleSignInBtn'),logout=$('signOutBtn');if(!title)return;
+ if(!currentUser){title.textContent='Using Awaked as a guest';status.textContent='Your data is saved on this device. Sign in to enable cloud sync.';badge.textContent='GUEST';login.style.display='';logout.style.display='none'}
+ else{title.textContent=currentUser.displayName||currentUser.email||'Signed in';login.style.display='none';logout.style.display='';
+  if(state==='syncing'){status.textContent='Connecting your data to your Awaked account…';badge.textContent='SYNCING'}
+  else if(state==='synced'){status.textContent='Your journal, saved schedules and profile are synced.';badge.textContent='SYNCED'}
+  else if(state==='error'){status.textContent='Cloud sync could not complete. Your local data is still safe.';badge.textContent='LOCAL'}
+  else{status.textContent='Signed in. Preparing your cloud data…';badge.textContent='SIGNED IN'}
+ }
+}
+async function loadAndMergeCloud(user){
+ const ref=doc(db,'users',user.uid,'appData','main');const snap=await getDoc(ref);
+ if(snap.exists()){
+  const cloud=snap.data();
+  data={...blank,...data,...cloud,profile:{...blank.profile,...(cloud.profile||{}),...data.profile,name:data.profile?.name||cloud.profile?.name||user.displayName||'',dob:data.profile?.dob||cloud.profile?.dob||'',phone:data.profile?.phone||cloud.profile?.phone||''},schedules:mergeById(data.schedules,cloud.schedules),entries:mergeById(data.entries,cloud.entries)};
+ }else{data.profile.name=data.profile.name||user.displayName||'';}
+ try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
+ renderProfile();renderSchedules();renderJournal();renderHomeSchedules();updateClock();cloudReady=true;
+ await setDoc(ref,safeCloudData(),{merge:true});setAccountUI('synced');
+}
+$('googleSignInBtn').onclick=async()=>{try{await signInWithPopup(auth,googleProvider)}catch(err){console.error(err);toast(err.code==='auth/unauthorized-domain'?'Add shreyas06-b.github.io to Firebase Authorized domains.':'Google sign-in failed. Please try again.')}};
+$('signOutBtn').onclick=async()=>{try{await signOut(auth);toast('Signed out. Your local data remains on this device.')}catch(err){toast('Could not sign out. Try again.')}};
+onAuthStateChanged(auth,async user=>{currentUser=user;cloudReady=false;setAccountUI(user?'syncing':'guest');if(user){try{await loadAndMergeCloud(user)}catch(err){console.error(err);setAccountUI('error');toast('Cloud sync unavailable. Your local data is safe.')}}});
+
 function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2300)}
 function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function updateClock(){const n=new Date();$('liveClock').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');$('today').textContent=new Intl.DateTimeFormat('en',{weekday:'long'}).format(n).toUpperCase();const name=data.profile.name;$('greeting').textContent=name?'Welcome back, '+name.split(' ')[0]+'.':'A better tomorrow starts tonight.'}
