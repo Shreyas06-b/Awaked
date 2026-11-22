@@ -24,6 +24,26 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
 .result{display:none;margin-top:17px;padding:20px 14px;border-radius:18px;border:1px solid rgba(117,151,255,.27);background:linear-gradient(145deg,rgba(105,131,230,.13),rgba(59,197,184,.08))}.result.show{display:block;animation:fade .3s ease}.result-kicker{text-align:center;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:2px}.result-time{text-align:center;font:700 clamp(48px,14vw,64px)/1.2 'Space Grotesk',sans-serif;letter-spacing:-3px;margin:8px 0 2px;background:linear-gradient(100deg,var(--text),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}.result-day{text-align:center;color:var(--muted);font-size:11px}.result-meta{display:flex;justify-content:space-around;text-align:center;gap:8px;border-top:1px solid var(--line);margin-top:16px;padding-top:14px}.meta-label{font-size:8px;letter-spacing:1px;color:var(--muted);margin-bottom:6px}.meta-value{font:600 13px 'Space Grotesk',sans-serif}
 .section-title{font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.7px;margin:4px 0 5px}.section-sub{font-size:12px;color:var(--muted);margin:0 0 18px;line-height:1.5}.tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--surface2);border:1px solid var(--line);border-radius:16px;padding:14px}.stat .n{font:700 22px 'Space Grotesk',sans-serif;margin:6px 0}.stat .l{font-size:9px;letter-spacing:1px;color:var(--muted);font-weight:700}.bar-chart{height:125px;display:flex;align-items:end;justify-content:space-around;gap:8px;padding:10px 2px 0}.bar-col{height:100%;flex:1;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:7px}.bar{width:100%;max-width:25px;min-height:3px;border-radius:7px 7px 3px 3px;background:linear-gradient(180deg,var(--accent2),var(--accent));}.bar-day{font-size:9px;color:var(--muted)}
 .entry,.schedule{border:1px solid var(--line);background:var(--surface2);border-radius:15px;padding:13px;margin-top:9px}.entry strong,.schedule strong{font:600 14px 'Space Grotesk',sans-serif}.pill{display:inline-block;border-radius:30px;padding:5px 8px;background:var(--glow);color:var(--text);font-size:9px;font-weight:700}.empty{text-align:center;padding:25px 14px;color:var(--muted);font-size:12px;line-height:1.6}.empty .ico{font-size:25px;margin-bottom:8px}
+
+.account-card{position:relative;overflow:hidden}
+.account-card:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),transparent)}
+.account-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.account-top .eyebrow{margin-bottom:12px}
+.account-identity{display:flex;align-items:center;gap:11px}
+.account-avatar{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;overflow:hidden;flex:none;background:linear-gradient(145deg,var(--accent),var(--accent2));color:#081426;font:700 17px 'Space Grotesk',sans-serif}
+.account-avatar img{width:100%;height:100%;object-fit:cover}
+.account-copy strong{font:700 14px 'Space Grotesk',sans-serif;display:block;max-width:210px;overflow-wrap:anywhere}
+.account-copy .small{margin-top:4px;max-width:230px;overflow-wrap:anywhere}
+.sync-pill{display:inline-flex;align-items:center;gap:6px;border-radius:30px;padding:6px 9px;font-size:9px;font-weight:800;letter-spacing:.5px;white-space:nowrap;background:var(--glow);color:var(--text)}
+.sync-pill i{width:6px;height:6px;border-radius:50%;background:currentColor;display:block}
+.sync-pill.synced{color:#36c98b;background:rgba(54,201,139,.12)}
+.sync-pill.syncing{color:var(--accent);background:var(--glow)}
+.sync-pill.error{color:#e6a15d;background:rgba(230,161,93,.12)}
+.sync-message{font-size:11px;color:var(--muted);line-height:1.5;margin:14px 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+.account-actions{display:flex;gap:8px;flex-wrap:wrap}
+.account-actions button{flex:1;min-width:120px}
+.account-actions #googleSignInBtn span{font-weight:800;font-size:15px;margin-right:7px}
+.account-footnote{font-size:10px;line-height:1.55;color:var(--muted);margin-top:12px}
 .profile-head{display:flex;align-items:center;gap:14px;margin-bottom:17px}.avatar{width:65px;height:65px;flex:none;border-radius:22px;display:grid;place-items:center;background:linear-gradient(145deg,var(--accent),var(--accent2));color:#091325;font:700 22px 'Space Grotesk',sans-serif;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.profile-name{font:700 19px 'Space Grotesk',sans-serif}.profile-sub{font-size:11px;color:var(--muted);margin-top:3px}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}.toggle-row:last-child{border:0}.toggle{appearance:none;width:40px;height:23px;border-radius:20px;background:#536079;position:relative;padding:0;cursor:pointer}.toggle:checked{background:var(--accent)}.toggle:before{content:"";position:absolute;width:17px;height:17px;border-radius:50%;background:white;left:3px;top:3px;transition:.2s}.toggle:checked:before{left:20px}
 .bottom-nav{position:fixed;z-index:20;left:50%;transform:translateX(-50%);bottom:0;width:min(490px,100%);padding:9px 12px calc(9px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(22px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav-btn{border:0;background:transparent;color:var(--muted);padding:7px 2px 5px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:700}.nav-btn .nav-icon{font-size:19px;line-height:1.1}.nav-btn.active{color:var(--accent);background:var(--glow)}.toast{position:fixed;z-index:40;bottom:92px;left:50%;transform:translateX(-50%);padding:10px 15px;border-radius:30px;background:var(--text);color:var(--bg);font-size:11px;font-weight:700;box-shadow:var(--shadow);display:none;white-space:nowrap}
 .splash{position:fixed;z-index:100;inset:0;background:radial-gradient(circle at 50% 42%,#1b3154,#090e1b 65%);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#f2f6ff;transition:opacity .6s,visibility .6s}.splash.hide{opacity:0;visibility:hidden}.splash-logo{width:90px;height:90px;border-radius:30px;background:linear-gradient(145deg,#8b9cff,#5de0d0);display:grid;place-items:center;box-shadow:0 0 65px rgba(110,151,255,.38);animation:float 2.3s ease-in-out infinite}.splash-logo svg{width:54px;height:54px}.splash h2{font:700 32px 'Space Grotesk',sans-serif;letter-spacing:-1px;margin:18px 0 5px}.splash p{font-size:10px;letter-spacing:2.4px;color:#9cacc8}@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(3deg)}}
@@ -81,20 +101,20 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
 </section>
 
 <section class="screen" id="profileScreen">
- <div class="section-title">Your profile</div><p class="section-sub">Make Awaked feel like yours. Sign in to sync your sleep data across devices, or keep using guest mode.</p>
+ <div class="section-title">Your profile</div><p class="section-sub">Make Awaked feel like yours. Sign in to sync your sleep data across devices, or continue as a guest.</p>
+ <div class="card account-card" id="accountCard">
+  <div class="account-top"><div><div class="eyebrow">YOUR AWAKED ACCOUNT</div><div class="account-identity"><div class="account-avatar" id="accountAvatar">A</div><div class="account-copy"><strong id="accountTitle">Using Awaked as a guest</strong><div class="small" id="accountEmail">Your personal sleep space</div></div></div></div><span class="sync-pill guest" id="syncBadge"><i></i> GUEST</span></div>
+  <div class="sync-message" id="accountStatus">Your sleep data is saved on this device. Sign in to sync it across devices.</div>
+  <div class="account-actions"><button class="primary" id="googleSignInBtn"><span>G</span> Continue with Google</button><button class="secondary" id="syncNowBtn" style="display:none">Sync now</button><button class="ghost" id="signOutBtn" style="display:none">Sign out</button></div>
+  <div class="account-footnote">Google sign-in is optional. Your existing journal and saved routines are merged when you sign in. Your profile photo remains on this device.</div>
+ </div>
  <div class="card">
-  <div class="card" id="accountCard">
-   <div class="eyebrow">AWAKED ACCOUNT</div>
-   <div class="row" style="align-items:center;gap:12px"><div style="flex:1"><strong id="accountTitle">Using Awaked as a guest</strong><div class="small" id="accountStatus" style="margin-top:4px">Your data is saved on this device. Sign in to enable cloud sync.</div></div><span class="pill" id="syncBadge">GUEST</span></div>
-   <div class="row wrap" style="margin-top:13px"><button class="primary" id="googleSignInBtn">CONTINUE WITH GOOGLE</button><button class="secondary" id="signOutBtn" style="display:none">SIGN OUT</button></div>
-   <div class="small" style="margin-top:9px">Google sign-in is optional. Your existing guest data will be merged into your account the first time you sign in. Profile photo remains on this device for now.</div>
-  </div>
   <div class="profile-head"><div class="avatar" id="avatarPreview">A</div><div><div class="profile-name" id="profileDisplayName">Your name</div><div class="profile-sub" id="profileDisplaySub">Personal sleep space</div></div></div>
   <div class="field"><label for="profilePhoto">Profile picture</label><input type="file" id="profilePhoto" accept="image/*"><div class="small">Choose a photo from your gallery. It is stored locally in this browser.</div></div>
   <div class="field"><label for="profileName">Your name</label><input id="profileName" maxlength="45" placeholder="Enter your name"></div>
   <div class="field-row"><div class="field"><label for="profileDob">Date of birth</label><input type="date" id="profileDob"></div><div class="field"><label for="profilePhone">Phone (optional)</label><input type="tel" id="profilePhone" maxlength="20" placeholder="Optional"></div></div>
   <button class="primary" id="saveProfileBtn">SAVE PROFILE</button>
-  <div class="small" style="margin-top:10px">Your profile details are stored locally and synced to your account when signed in. Date of birth and phone are optional.</div>
+  <div class="small" style="margin-top:10px">Your profile is stored locally and synced when signed in. Date of birth and phone are optional.</div>
  </div>
  <div class="card"><div class="eyebrow">PREFERENCES</div>
   <div class="toggle-row"><span>Dark mode</span><input class="toggle" type="checkbox" id="darkToggle" checked></div>
@@ -130,58 +150,133 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account" });
+googleProvider.setCustomParameters({prompt:"select_account"});
 
 const $=id=>document.getElementById(id),KEY='awaked2-data';
 const blank={profile:{name:'',dob:'',phone:'',photo:''},schedules:[],entries:[],theme:'dark',reduceMotion:false};
+let currentUser=null,cloudReady=false,cloudTimer=null,cloudBusy=false;
 let data=loadData(),reverse=false,lastCalculation=null;
 function loadData(){try{return {...blank,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(blank)}}
-let currentUser = null;
-let cloudTimer = null;
-let cloudReady = false;
-let cloudBusy = false;
 function persist(){
- try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast('Storage is full. Try a smaller profile photo.')}
+ try{localStorage.setItem(KEY,JSON.stringify(data))}
+ catch(e){toast('Storage is full. Try a smaller profile photo.')}
  if(currentUser && cloudReady) scheduleCloudSave();
 }
-function safeCloudData(){
- return {profile:{name:data.profile?.name||'',dob:data.profile?.dob||'',phone:data.profile?.phone||''},schedules:Array.isArray(data.schedules)?data.schedules:[],entries:Array.isArray(data.entries)?data.entries:[],theme:data.theme||'dark',reduceMotion:!!data.reduceMotion,updatedAt:serverTimestamp()};
+function cloudPayload(){
+ return {
+  profile:{name:data.profile?.name||'',dob:data.profile?.dob||'',phone:data.profile?.phone||''},
+  schedules:Array.isArray(data.schedules)?data.schedules:[],
+  entries:Array.isArray(data.entries)?data.entries:[],
+  theme:data.theme||'dark',
+  reduceMotion:!!data.reduceMotion,
+  updatedAt:serverTimestamp()
+ };
+}
+function setAccountState(state){
+ const title=$('accountTitle'),status=$('accountStatus'),badge=$('syncBadge');
+ const login=$('googleSignInBtn'),logout=$('signOutBtn'),sync=$('syncNowBtn');
+ const avatar=$('accountAvatar'),email=$('accountEmail');
+ if(!title)return;
+ badge.className='sync-pill';
+ if(!currentUser){
+  title.textContent='Using Awaked as a guest';
+  email.textContent='Your personal sleep space';
+  status.textContent='Your sleep data is saved on this device. Sign in to sync it across devices.';
+  badge.classList.add('guest');badge.innerHTML='<i></i> GUEST';
+  avatar.textContent=(data.profile?.name||'A').trim().charAt(0).toUpperCase();
+  login.style.display='';logout.style.display='none';sync.style.display='none';
+  return;
+ }
+ title.textContent=currentUser.displayName||'Awaked member';
+ email.textContent=currentUser.email||'Google account connected';
+ avatar.innerHTML=currentUser.photoURL?`<img src="${escapeHTML(currentUser.photoURL)}" alt="Google profile photo">`:escapeHTML((currentUser.displayName||'A').trim().charAt(0).toUpperCase());
+ login.style.display='none';logout.style.display='';sync.style.display='';
+ if(state==='syncing'){
+  status.textContent='Syncing your journal, routines and profile with your Awaked account…';
+  badge.classList.add('syncing');badge.innerHTML='<i></i> SYNCING';
+ }else if(state==='synced'){
+  status.textContent='All caught up. Your latest changes are saved to your Awaked cloud account.';
+  badge.classList.add('synced');badge.innerHTML='<i></i> SYNCED';
+ }else if(state==='offline'){
+  status.textContent='You are offline. Changes stay on this device and will sync when you reconnect.';
+  badge.classList.add('error');badge.innerHTML='<i></i> OFFLINE';
+ }else if(state==='error'){
+  status.textContent='Cloud sync could not complete. Your local data is still safe. Try Sync now when connected.';
+  badge.classList.add('error');badge.innerHTML='<i></i> NEEDS ATTENTION';
+ }else{
+  status.textContent='Signed in. Preparing your cloud data…';
+  badge.classList.add('syncing');badge.innerHTML='<i></i> CONNECTED';
+ }
 }
 function scheduleCloudSave(){
  clearTimeout(cloudTimer);
  cloudTimer=setTimeout(async()=>{
-  if(!currentUser || !cloudReady || cloudBusy)return;
-  cloudBusy=true;
-  try{await setDoc(doc(db,'users',currentUser.uid,'appData','main'),safeCloudData(),{merge:true});setAccountUI('synced')}
-  catch(err){console.error('Awaked cloud sync failed:',err);setAccountUI('error')}
+  if(!currentUser||!cloudReady||cloudBusy)return;
+  cloudBusy=true;setAccountState('syncing');
+  try{
+   await setDoc(doc(db,'users',currentUser.uid,'appData','main'),cloudPayload(),{merge:true});
+   setAccountState('synced');
+  }catch(err){console.error('Awaked cloud sync:',err);setAccountState('error')}
   finally{cloudBusy=false}
- },900);
+ },1000);
 }
-function mergeById(localItems,cloudItems){const map=new Map();[...(cloudItems||[]),...(localItems||[])].forEach(item=>map.set(String(item.id),item));return [...map.values()].sort((a,b)=>Number(a.id)-Number(b.id));}
-function setAccountUI(state){
- const title=$('accountTitle'),status=$('accountStatus'),badge=$('syncBadge'),login=$('googleSignInBtn'),logout=$('signOutBtn');if(!title)return;
- if(!currentUser){title.textContent='Using Awaked as a guest';status.textContent='Your data is saved on this device. Sign in to enable cloud sync.';badge.textContent='GUEST';login.style.display='';logout.style.display='none'}
- else{title.textContent=currentUser.displayName||currentUser.email||'Signed in';login.style.display='none';logout.style.display='';
-  if(state==='syncing'){status.textContent='Connecting your data to your Awaked account…';badge.textContent='SYNCING'}
-  else if(state==='synced'){status.textContent='Your journal, saved schedules and profile are synced.';badge.textContent='SYNCED'}
-  else if(state==='error'){status.textContent='Cloud sync could not complete. Your local data is still safe.';badge.textContent='LOCAL'}
-  else{status.textContent='Signed in. Preparing your cloud data…';badge.textContent='SIGNED IN'}
+function mergeItems(localItems,cloudItems){
+ const merged=new Map();
+ [...(cloudItems||[]),...(localItems||[])].forEach((item,index)=>{
+  const key=item.id!=null?String(item.id):JSON.stringify(item);
+  merged.set(key,item);
+ });
+ return [...merged.values()];
+}
+async function connectUserData(user){
+ const ref=doc(db,'users',user.uid,'appData','main');
+ const snapshot=await getDoc(ref);
+ if(snapshot.exists()){
+  const cloud=snapshot.data();
+  const local=loadData();
+  data={...blank,...cloud,...local,
+   profile:{...blank.profile,...(cloud.profile||{}),...(local.profile||{}),
+    name:local.profile?.name||cloud.profile?.name||user.displayName||''},
+   schedules:mergeItems(local.schedules,cloud.schedules),
+   entries:mergeItems(local.entries,cloud.entries)};
+ }else{
+  data.profile.name=data.profile.name||user.displayName||'';
  }
-}
-async function loadAndMergeCloud(user){
- const ref=doc(db,'users',user.uid,'appData','main');const snap=await getDoc(ref);
- if(snap.exists()){
-  const cloud=snap.data();
-  data={...blank,...data,...cloud,profile:{...blank.profile,...(cloud.profile||{}),...data.profile,name:data.profile?.name||cloud.profile?.name||user.displayName||'',dob:data.profile?.dob||cloud.profile?.dob||'',phone:data.profile?.phone||cloud.profile?.phone||''},schedules:mergeById(data.schedules,cloud.schedules),entries:mergeById(data.entries,cloud.entries)};
- }else{data.profile.name=data.profile.name||user.displayName||'';}
  try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
- renderProfile();renderSchedules();renderJournal();renderHomeSchedules();updateClock();cloudReady=true;
- await setDoc(ref,safeCloudData(),{merge:true});setAccountUI('synced');
+ renderProfile();renderSchedules();renderJournal();renderHomeSchedules();updateClock();
+ cloudReady=true;
+ await setDoc(ref,cloudPayload(),{merge:true});
+ setAccountState('synced');
 }
-$('googleSignInBtn').onclick=async()=>{try{await signInWithPopup(auth,googleProvider)}catch(err){console.error(err);toast(err.code==='auth/unauthorized-domain'?'Add shreyas06-b.github.io to Firebase Authorized domains.':'Google sign-in failed. Please try again.')}};
-$('signOutBtn').onclick=async()=>{try{await signOut(auth);toast('Signed out. Your local data remains on this device.')}catch(err){toast('Could not sign out. Try again.')}};
-onAuthStateChanged(auth,async user=>{currentUser=user;cloudReady=false;setAccountUI(user?'syncing':'guest');if(user){try{await loadAndMergeCloud(user)}catch(err){console.error(err);setAccountUI('error');toast('Cloud sync unavailable. Your local data is safe.')}}});
-
+$('googleSignInBtn').addEventListener('click',async()=>{
+ try{await signInWithPopup(auth,googleProvider)}
+ catch(err){
+  console.error(err);
+  toast(err.code==='auth/unauthorized-domain'?'Add shreyas06-b.github.io under Firebase Authorized domains.':'Google sign-in failed. Please try again.');
+ }
+});
+$('signOutBtn').addEventListener('click',async()=>{
+ try{await signOut(auth);toast('Signed out. Your local data remains on this device.')}
+ catch(err){console.error(err);toast('Could not sign out. Please try again.')}
+});
+$('syncNowBtn').addEventListener('click',async()=>{
+ if(!currentUser){toast('Sign in to sync your data');return}
+ if(!navigator.onLine){setAccountState('offline');toast('You are offline');return}
+ try{
+  setAccountState('syncing');
+  await setDoc(doc(db,'users',currentUser.uid,'appData','main'),cloudPayload(),{merge:true});
+  setAccountState('synced');toast('Awaked data synced');
+ }catch(err){console.error(err);setAccountState('error');toast('Sync failed. Your local data is safe.')}
+});
+window.addEventListener('online',()=>{if(currentUser&&cloudReady)scheduleCloudSave();else if(currentUser)setAccountState('syncing')});
+window.addEventListener('offline',()=>{if(currentUser)setAccountState('offline')});
+onAuthStateChanged(auth,async user=>{
+ currentUser=user;cloudReady=false;setAccountState(user?'syncing':'guest');
+ if(user){
+  try{await connectUserData(user)}
+  catch(err){console.error(err);setAccountState('error');toast('Cloud sync unavailable. Your local data is safe.')}
+ }
+});
 function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',2300)}
 function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function updateClock(){const n=new Date();$('liveClock').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');$('today').textContent=new Intl.DateTimeFormat('en',{weekday:'long'}).format(n).toUpperCase();const name=data.profile.name;$('greeting').textContent=name?'Welcome back, '+name.split(' ')[0]+'.':'A better tomorrow starts tonight.'}

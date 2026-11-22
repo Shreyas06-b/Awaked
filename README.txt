@@ -1,26 +1,12 @@
-AWAKED 3.0 — GitHub Pages + Firebase
+AWAKED 3.1 — Account experience and sync status
 
-FILES
-- index.html
-- manifest.json
-- sw.js
-- icon.svg
-- README.txt
+Upload the five files in this ZIP to the root of your existing GitHub repository, replacing the previous versions, then commit.
 
-DEPLOY
-1. Open your existing repository: https://github.com/Shreyas06-b/Awaked
-2. Upload these five extracted files to the repository root, replacing the existing files.
-3. Commit the changes and wait for GitHub Pages to deploy.
-4. Open https://shreyas06-b.github.io/Awaked/
+Included:
+- Google account identity with Google profile photo and email.
+- Clear guest / syncing / synced / offline / needs-attention states.
+- Manual Sync now button.
+- Offline/online event handling; local data remains stored on the device.
+- Existing Google sign-in, guest mode and Firestore integration retained.
 
-FIREBASE FEATURES
-- Optional Google sign-in; guest mode remains available.
-- Guest journal entries and saved schedules are merged with the cloud copy on first sign-in.
-- Signed-in data is stored at users/{uid}/appData/main.
-- The published Firestore rules should restrict access to the matching authenticated UID.
-- Profile name, optional DOB/phone, schedules, journal and preferences sync. Profile photo stays local for now.
-
-IMPORTANT
-- Firebase web config is client-side configuration, not a service-account key. Never publish service-account private keys.
-- Do not delete the repository. Replace the existing five files in the repository root.
-- Firestore security depends on rules, not secrecy of the web config.
+After deployment, test sign-in, manual sync, and journal/schedule updates. For a true second-device test, sign into the same Google account on another browser/device and verify the same journal and routines appear. The app's profile photo remains local unless separately uploaded to cloud storage.
