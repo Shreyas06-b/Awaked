@@ -1,12 +1,12 @@
-AWAKED 3.1 — Account experience and sync status
+AWAKED 4.0 — Account, recommendations, consistency and reminders
 
-Upload the five files in this ZIP to the root of your existing GitHub repository, replacing the previous versions, then commit.
+DEPLOY: Extract this ZIP and upload all five files to the root of the existing GitHub repository https://github.com/Shreyas06-b/Awaked, replacing previous versions. Commit changes and wait for GitHub Pages.
 
-Included:
-- Google account identity with Google profile photo and email.
-- Clear guest / syncing / synced / offline / needs-attention states.
-- Manual Sync now button.
-- Offline/online event handling; local data remains stored on the device.
-- Existing Google sign-in, guest mode and Firestore integration retained.
+FEATURES
+- 14-day sleep consistency estimate based on bedtime and wake-time variation; requires at least 3 journal entries. Not a medical or sleep-quality score.
+- Smart recommendation based on recent journal history, suggesting a regular wake time and approximate bedtime.
+- Optional bedtime and wake-up browser notifications. Scheduled while the app is open; browser timers may not run if the app/browser is closed. Reliable closed-app delivery requires push notification infrastructure.
+- JSON export includes local data and a cloud copy when signed in.
+- Account deletion reauthenticates with Google and deletes users/{uid}/appData/main, users/{uid} and the Firebase Authentication user. Extend deletion logic if more cloud collections are added later.
 
-After deployment, test sign-in, manual sync, and journal/schedule updates. For a true second-device test, sign into the same Google account on another browser/device and verify the same journal and routines appear. The app's profile photo remains local unless separately uploaded to cloud storage.
+Existing Google login, guest mode, Firestore sync, calculator, journal and saved routines are retained.
