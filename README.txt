@@ -1,14 +1,11 @@
-AWAKED 4.5 — SLEEPING FOX + SLEEP GOALS
+AWAKED 4.5.1 — JOURNAL, SLEEP BAR & SYNC REPAIR
 
-This release includes the fox branding, first-run welcome guidance, weekly comparison, and a personal sleep-goal tracker on the Home screen. The goal is saved locally and included in the existing Firestore sync payload.
+This release restores missing week-on-week comparison elements used by the journal renderer, which could stop journal rendering with a JavaScript error. It also retries cloud saves safely when another save is in progress and retains the personal sleep-goal setting in Firestore sync.
 
-Included: index.html, manifest.json, sw.js, icon.svg, icon-192.png, icon-512.png.
+Publish:
+1. Back up your repository.
+2. Extract this ZIP and upload all six app files to the repository root, replacing matching files.
+3. Commit to main and wait for GitHub Pages deployment.
+4. Reload Awaked and test journal entries, the sleep-goal progress bar, and cloud sync while signed in.
 
-PUBLISHING
-1. Back up your current repository.
-2. Extract this ZIP.
-3. Upload all six app files to the root of the Awaked GitHub repository, replacing matching files.
-4. Commit to main and wait for GitHub Pages to deploy.
-5. Refresh the website. If the installed app retains old assets, close it fully and reopen; reinstall only if the icon does not refresh.
-
-Existing local journal and routine storage keys and Firebase collection paths are retained.
+The local storage key and Firestore document path are unchanged. This package does not intentionally clear local or cloud data.
