@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#090e1b">
+<meta name="theme-color" content="#0b110e">
 <meta name="description" content="Awaked — your personal sleep companion.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png" type="image/png" sizes="192x192">
@@ -108,6 +108,46 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.app{position:re
 .reduce-motion *, .reduce-motion *:before, .reduce-motion *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 button:focus-visible,a:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.screen{animation:none}}
+
+/* Awaked 4.5.3 — Nocturne & Champagne luxury palette */
+:root{
+ --bg:#0b110e;--bg2:#111b16;--surface:rgba(21,32,26,.94);--surface2:#17231c;
+ --text:#f4f0e6;--muted:#aaa696;--line:rgba(211,184,125,.17);
+ --accent:#c6a66b;--accent2:#e8d8b3;--glow:rgba(198,166,107,.16);
+ --input:#101a14;--shadow:0 22px 60px rgba(0,0,0,.38);color-scheme:dark
+}
+[data-theme="light"]{
+ --bg:#f5f1e8;--bg2:#ebe5d8;--surface:rgba(255,253,247,.96);--surface2:#f0ebdf;
+ --text:#24271f;--muted:#777568;--line:rgba(111,91,55,.18);
+ --accent:#987744;--accent2:#c4a66d;--glow:rgba(152,119,68,.13);
+ --input:#fffdf8;--shadow:0 18px 48px rgba(66,54,33,.09);color-scheme:light
+}
+body{background:radial-gradient(ellipse at 14% 0%,rgba(198,166,107,.12),transparent 34%),radial-gradient(ellipse at 92% 48%,rgba(49,91,66,.12),transparent 34%),linear-gradient(145deg,var(--bg),var(--bg2))}
+.card{border-color:var(--line);box-shadow:0 18px 48px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,244,220,.025)}
+[data-theme="light"] .card{box-shadow:0 14px 38px rgba(66,54,33,.07),inset 0 1px 0 rgba(255,255,255,.8)}
+.primary{background:linear-gradient(110deg,#b18c50,#e2c98f 52%,#b18c50);color:#19170f;box-shadow:0 10px 28px rgba(198,166,107,.2);border:1px solid rgba(239,220,174,.32)}
+.primary:active{filter:brightness(.96);transform:translateY(1px)}
+.result{border-color:rgba(198,166,107,.3);background:linear-gradient(145deg,rgba(198,166,107,.13),rgba(54,91,66,.12))}
+.result-time{background:linear-gradient(100deg,var(--text),var(--accent2));-webkit-background-clip:text;background-clip:text}
+.bar{background:linear-gradient(180deg,#e4c98f,#9c7946)}
+.score-track>div,.goal-card .score-track>div{background:linear-gradient(90deg,#8caa85,#d4b477)}
+.recommendation-card{border-color:rgba(142,173,137,.28)}
+.consistency-score,.compare-trend{color:var(--accent)}
+.brand-mark,.splash-logo{background:#17251c;border:1px solid rgba(218,190,133,.3);box-shadow:0 10px 30px rgba(0,0,0,.28)}
+.splash{background:radial-gradient(circle at 50% 42%,#26392b,#0b110e 68%);color:#f4f0e6}
+.splash-logo{box-shadow:0 0 70px rgba(198,166,107,.2)}
+.splash p{color:#c1b89f}
+.account-card:before,.creator-footer:before{background:linear-gradient(90deg,#987744,#e2c98f,transparent)}
+.account-avatar,.avatar{background:linear-gradient(145deg,#c6a66b,#e8d8b3);color:#211b10}
+.nav-btn.active{color:var(--accent);background:var(--glow)}
+.theme-btn{border-color:var(--line)}
+.pill,.sync-pill{background:var(--glow)}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+button:focus-visible,a:focus-visible{outline-color:var(--accent2)}
+.onboarding{background:rgba(5,10,7,.82)}
+.onboarding-card{box-shadow:0 28px 90px rgba(0,0,0,.5)}
+@media(prefers-reduced-motion:no-preference){.primary,.secondary,.ghost,.nav-btn,.theme-btn{transition:background .2s,border-color .2s,transform .2s,filter .2s}}
+
 </style>
 </head>
 <body>
@@ -378,7 +418,7 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block'
 function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function updateClock(){const n=new Date();$('liveClock').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');$('today').textContent=new Intl.DateTimeFormat('en',{weekday:'long'}).format(n).toUpperCase();const name=data.profile.name;$('greeting').textContent=name?'Welcome back, '+name.split(' ')[0]+'.':'A better tomorrow starts tonight.'}
 updateClock();setInterval(updateClock,1000);
-function setTheme(t){data.theme=t;document.documentElement.dataset.theme=t;$('themeToggle').textContent=t==='light'?'☾':'☼';$('darkToggle').checked=t==='dark';document.querySelector('meta[name="theme-color"]').content=t==='light'?'#f3f6fc':'#090e1b';persist()}
+function setTheme(t){data.theme=t;document.documentElement.dataset.theme=t;$('themeToggle').textContent=t==='light'?'☾':'☼';$('darkToggle').checked=t==='dark';document.querySelector('meta[name="theme-color"]').content=t==='light'?'#f5f1e8':'#0b110e';persist()}
 setTheme(data.theme||'dark');renderSleepGoal();$('themeToggle').onclick=()=>setTheme(data.theme==='dark'?'light':'dark');$('darkToggle').onchange=e=>setTheme(e.target.checked?'dark':'light');
 if(data.reduceMotion)document.documentElement.style.setProperty('--motion','0');
 $('motionToggle').onchange=e=>{data.reduceMotion=e.target.checked;document.documentElement.classList.toggle('reduce-motion',data.reduceMotion);persist();toast('Animation preference saved')};
