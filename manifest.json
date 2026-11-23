@@ -2,13 +2,13 @@
   "id": "./",
   "name": "Awaked \u2014 Your Sleep Companion",
   "short_name": "Awaked",
-  "description": "Plan sleep, track personal sleep goals, save routines and reflect on your rest.",
+  "description": "Plan your sleep, record your nights and understand your sleep patterns.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0b110e",
-  "theme_color": "#0b110e",
+  "background_color": "#F4F3ED",
+  "theme_color": "#F4F3ED",
   "icons": [
     {
       "src": "icon-192.png",
