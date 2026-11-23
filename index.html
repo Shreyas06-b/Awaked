@@ -164,6 +164,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent2);outline-of
  <div class="card consistency-card"><div class="row"><div><div class="eyebrow" style="margin:0">SLEEP CONSISTENCY</div><div class="small" style="margin-top:5px">Based on your last 14 days of journal entries</div></div><span class="pill">14-DAY SCORE</span></div>
   <div class="consistency-score-row"><div class="consistency-score" id="consistencyScore">—</div><div><strong id="consistencyLabel">Building your pattern</strong><div class="small" id="consistencyDetail">Log at least 3 nights to calculate your score.</div></div></div><div class="score-track"><div id="consistencyBar"></div></div><div class="small" style="margin-top:9px">An estimate of bedtime and wake-time regularity, not a medical or sleep-quality score.</div></div>
  <div class="card recommendation-card"><div class="eyebrow">SMART SLEEP RECOMMENDATION</div><div id="recommendationTitle" style="font:600 16px 'Nunito Sans',sans-serif">Your sleep pattern is taking shape</div><p class="small" id="recommendationText" style="line-height:1.6;margin:8px 0 0">Add at least 3 journal entries and Awaked will suggest a steadier schedule.</p></div>
+ <div class="card"><div class="eyebrow">WEEK-ON-WEEK COMPARISON</div><div class="tile-grid">
+  <div class="stat"><div class="l">THIS WEEK</div><div class="n" id="thisWeekCompare">—</div><div class="small" id="thisWeekCount">No entries yet</div></div>
+  <div class="stat"><div class="l">PREVIOUS WEEK</div><div class="n" id="previousWeekCompare">—</div><div class="small">Average per logged night</div></div>
+ </div><div class="small" id="weekTrend" style="margin-top:10px">Add journal entries to compare your weeks.</div></div>
  <div class="card" style="margin-top:14px"><div class="row"><div class="eyebrow" style="margin:0">WEEKLY SLEEP</div><span class="pill">Last 7 days</span></div><div class="bar-chart" id="weekChart"></div><div class="small" style="margin-top:8px">Bars show recorded sleep duration. No automatic tracking is claimed.</div></div>
  <div class="card"><div class="eyebrow">RECENT ENTRIES</div><div id="journalEntries"></div></div>
 </section>
@@ -299,15 +303,17 @@ function setAccountState(state){
 }
 function scheduleCloudSave(){
  clearTimeout(cloudTimer);
+ if(!currentUser||!cloudReady)return;
  cloudTimer=setTimeout(async()=>{
-  if(!currentUser||!cloudReady||cloudBusy)return;
+  if(!currentUser||!cloudReady)return;
+  if(cloudBusy){scheduleCloudSave();return}
   cloudBusy=true;setAccountState('syncing');
   try{
    await setDoc(doc(db,'users',currentUser.uid,'appData','main'),cloudPayload(),{merge:true});
    setAccountState('synced');
-  }catch(err){console.error('Awaked cloud sync:',err);setAccountState('error')}
+  }catch(err){console.error('Awaked cloud sync:',err);setAccountState('error');toast('Cloud sync failed. Your data remains saved on this device.')}
   finally{cloudBusy=false}
- },1000);
+ },cloudBusy?700:900);
 }
 function mergeItems(localItems,cloudItems){
  const merged=new Map();
@@ -328,7 +334,8 @@ async function connectUserData(user){
     name:local.profile?.name||cloud.profile?.name||user.displayName||''},
    schedules:mergeItems(local.schedules,cloud.schedules),
    entries:mergeItems(local.entries,cloud.entries),
-   reminders:{bedEnabled:false,bedTime:'22:00',wakeEnabled:false,wakeTime:'06:30',...(local.reminders||{}),...(cloud.reminders||{})}};
+   reminders:{bedEnabled:false,bedTime:'22:00',wakeEnabled:false,wakeTime:'06:30',...(cloud.reminders||{}),...(local.reminders||{})},
+   sleepGoal:Number(local.sleepGoal)||Number(cloud.sleepGoal)||8};
  }else{
   data.profile.name=data.profile.name||user.displayName||'';
  }
@@ -425,7 +432,7 @@ function renderInsights(){
 }
 function renderJournal(){const entries=[...data.entries].sort((a,b)=>b.date.localeCompare(a.date));const now=new Date();const weekStart=new Date(now);weekStart.setDate(now.getDate()-6);weekStart.setHours(0,0,0,0);const week=entries.filter(e=>new Date(e.date+'T12:00:00')>=weekStart&&new Date(e.date+'T12:00:00')<=now);const total=week.reduce((s,e)=>s+e.hours,0);$('avgSleep').textContent=week.length?(total/week.length).toFixed(1)+'h':'—';$('weekEntries').textContent=week.length;$('totalSleep').textContent=week.length?total.toFixed(1)+'h':'—';$('bestMood').textContent=week.length?Math.max(...week.map(e=>e.rating))+'/5':'—';
 const previousStart=new Date(now);previousStart.setDate(now.getDate()-13);previousStart.setHours(0,0,0,0);const previousEnd=new Date(now);previousEnd.setDate(now.getDate()-7);previousEnd.setHours(23,59,59,999);const previous=entries.filter(e=>{const d=new Date(e.date+'T12:00:00');return d>=previousStart&&d<=previousEnd});const previousTotal=previous.reduce((sum,e)=>sum+Number(e.hours||0),0);const thisAverage=week.length?total/week.length:0,previousAverage=previous.length?previousTotal/previous.length:0;$('thisWeekCompare').textContent=week.length?thisAverage.toFixed(1)+'h':'—';$('thisWeekCount').textContent=week.length?`${week.length} night${week.length===1?'':'s'} logged`:'No entries yet';$('previousWeekCompare').textContent=previous.length?previousAverage.toFixed(1)+'h':'—';$('weekTrend').textContent=week.length&&previous.length?`${thisAverage>=previousAverage?'↑':'↓'} ${Math.abs(thisAverage-previousAverage).toFixed(1)}h average per night`:previous.length?'Previous week recorded':'Need entries in both weeks';const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=localDateKey(d);const rec=week.filter(e=>e.date===key);days.push({label:d.toLocaleDateString('en',{weekday:'short'}),hours:rec.reduce((s,e)=>s+e.hours,0)})}const max=Math.max(9,...days.map(d=>d.hours));$('weekChart').innerHTML=days.map(d=>`<div class="bar-col"><div class="bar" style="height:${d.hours?Math.max(5,d.hours/max*100):3}%"></div><div class="bar-day">${d.label}</div></div>`).join('');$('journalEntries').innerHTML=entries.length?entries.slice(0,30).map(e=>`<div class="entry"><div class="row"><strong>${new Date(e.date+'T12:00:00').toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric'})}</strong><span class="pill">${e.hours.toFixed(1)} HOURS</span></div><div class="small" style="margin-top:7px">${e.bed} → ${e.wake} · Rest rating ${e.rating}/5</div>${e.note?`<div class="small" style="margin-top:5px">${escapeHTML(e.note)}</div>`:''}<div class="row" style="justify-content:flex-end;margin-top:7px"><button class="ghost" onclick="deleteEntry(${e.id})">Delete</button></div></div>`).join(''):'<div class="empty"><div class="ico">☾</div>No journal entries yet.<br>Record your first night above.</div>';renderInsights()}
-window.deleteEntry=id=>{data.entries=data.entries.filter(e=>e.id!==id);persist();renderJournal();toast('Entry deleted')};
+window.deleteEntry=id=>{data.entries=data.entries.filter(e=>e.id!==id);persist();renderJournal();renderSleepGoal();toast('Entry deleted')};
 $('addScheduleBtn').onclick=()=>{const name=$('scheduleName').value.trim(),category=$('scheduleCategory').value,bed=$('scheduleBed').value,hours=Number($('scheduleHours').value);if(!name||!bed||!Number.isFinite(hours)||hours<.25||hours>24){$('scheduleError').style.display='block';return}data.schedules.push({id:Date.now(),name,category,bed,hours});persist();$('scheduleName').value='';$('scheduleError').style.display='none';renderSchedules();renderHomeSchedules();toast('Routine saved')};
 function loadSchedule(id){const s=data.schedules.find(x=>x.id===id);if(!s)return;navigate('homeScreen');reverse=false;$('timeInput').value=s.bed;$('hoursInput').value=s.hours;$('modeEyebrow').textContent='PLAN YOUR SLEEP';$('timeLabel').textContent='What time are you going to sleep?';$('calculateBtn').textContent='CALCULATE WAKE-UP TIME ↗';calc();toast('Routine loaded')}
 function deleteSchedule(id){data.schedules=data.schedules.filter(x=>x.id!==id);persist();renderSchedules();renderHomeSchedules();toast('Routine deleted')}
